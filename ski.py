@@ -4,7 +4,7 @@ import unittest
 def longest_path(size, grid, current_pos):
     possible_movement = next_possible_movement(size, current_pos)
     possible_movement_down = valid_next_movement(current_pos, grid, possible_movement)
-
+    
     max_path_length = 1
     for next_pos in possible_movement_down:
         max_possible = 1 + longest_path(size, grid, next_pos)
@@ -108,7 +108,13 @@ class SkiTest(unittest.TestCase):
         self.assertTrue((1, 2) in res)
         self.assertTrue((2, 1) in res)
 
+    def test_longest_path_4_by_4(self):
+        size = (4, 4)
+        grid = [[4, 8, 7, 3], [2, 5, 9, 3], [6, 3, 2, 5], [4, 4, 1, 6]]
+        current_pos = (1, 2)
+        res = longest_path(size, grid, current_pos)
+        self.assertEqual(res, 5)
+
 
 if __name__ == '__main__':
     unittest.main()
-
