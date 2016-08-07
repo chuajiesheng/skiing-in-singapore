@@ -2,16 +2,20 @@ import unittest
 
 
 def longest_path(size, grid, current_pos):
+    x, y = current_pos
+    current_level = grid[x][y]
+
     possible_movement = next_possible_movement(size, current_pos)
     possible_movement_down = valid_next_movement(current_pos, grid, possible_movement)
-    
-    max_path_length = 1
-    for next_pos in possible_movement_down:
-        max_possible = 1 + longest_path(size, grid, next_pos)
-        if max_possible > max_path_length:
-            max_path_length = max_possible
 
-    return max_path_length
+    max_elements = []
+
+    for next_pos in possible_movement_down:
+        max_possible = longest_path(size, grid, next_pos)
+        if len(max_possible) > len(max_elements):
+            max_elements = max_possible
+
+    return [current_level] + max_elements
 
 
 def valid_next_movement(current_pos, grid, possible_movement):
@@ -58,7 +62,7 @@ class SkiTest(unittest.TestCase):
         grid = [[1]]
         current_pos = (0, 0)
         res = longest_path(size, grid, current_pos)
-        self.assertEqual(res, 1)
+        self.assertEqual(res, [1])
 
     def test_longest_path_2_by_2(self):
         # 4 3
@@ -67,7 +71,7 @@ class SkiTest(unittest.TestCase):
         grid = [[4, 3], [2, 1]]
         current_pos = (0, 0)
         res = longest_path(size, grid, current_pos)
-        self.assertEqual(res, 3)
+        self.assertEqual(res, [4, 3, 1])
 
     def test_next_possible_movement(self):
         size = (2, 2)
@@ -113,7 +117,7 @@ class SkiTest(unittest.TestCase):
         grid = [[4, 8, 7, 3], [2, 5, 9, 3], [6, 3, 2, 5], [4, 4, 1, 6]]
         current_pos = (1, 2)
         res = longest_path(size, grid, current_pos)
-        self.assertEqual(res, 5)
+        self.assertEqual(res, [9, 5, 3, 2, 1])
 
 
 if __name__ == '__main__':
