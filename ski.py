@@ -2,18 +2,11 @@ import unittest
 
 
 def longest_path(size, grid, current_pos):
-    max_x, max_y = size
     x, y = current_pos
-    current_level = grid[x][y]
+    max_x, max_y = size
 
     possible_movement = next_possible_movement(max_x, max_y, x, y)
-
-    possible_movement_down = []
-    for next_pos in possible_movement:
-        next_x, next_y = next_pos
-        next_level = grid[next_x][next_y]
-        if next_level < current_level:
-            possible_movement_down.append(next_pos)
+    possible_movement_down = valid_next_movement(current_pos, grid, possible_movement)
 
     max_path_length = 1
     for next_pos in possible_movement_down:
@@ -22,6 +15,21 @@ def longest_path(size, grid, current_pos):
             max_path_length = max_possible
 
     return max_path_length
+
+
+def valid_next_movement(current_pos, grid, possible_movement):
+    x, y = current_pos
+    current_level = grid[x][y]
+
+    possible_movement_down = []
+
+    for next_pos in possible_movement:
+        next_x, next_y = next_pos
+        next_level = grid[next_x][next_y]
+        if next_level < current_level:
+            possible_movement_down.append(next_pos)
+
+    return possible_movement_down
 
 
 def next_possible_movement(max_x, max_y, x, y):
@@ -76,6 +84,27 @@ class SkiTest(unittest.TestCase):
         self.assertEqual(len(res), 4)
         self.assertTrue((0, 1) in res)
         self.assertTrue((1, 0) in res)
+        self.assertTrue((1, 2) in res)
+        self.assertTrue((2, 1) in res)
+
+    def test_valid_next_movement(self):
+        grid = [[4, 3], [2, 1]]
+        current_pos = (0, 0)
+        possible_movement = [(0, 1), (1, 0)]
+        res = valid_next_movement(current_pos, grid, possible_movement)
+        self.assertEqual(len(res), 2)
+        self.assertTrue((0, 1) in res)
+        self.assertTrue((1, 0) in res)
+
+    def test_valid_next_movement_3_by_3(self):
+        # 6 7 8
+        # 5 4 3
+        # 3 1 2
+        grid = [[6, 7, 8], [5, 4, 3], [3, 1, 2]]
+        current_pos = (1, 1)
+        possible_movement = [(0, 1), (1, 0), (1, 2), (2, 1)]
+        res = valid_next_movement(current_pos, grid, possible_movement)
+        self.assertEqual(len(res), 2)
         self.assertTrue((1, 2) in res)
         self.assertTrue((2, 1) in res)
 
