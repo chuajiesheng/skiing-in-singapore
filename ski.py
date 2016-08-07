@@ -2,6 +2,22 @@ import unittest
 from itertools import product
 
 
+def read_file(filename):
+    with open(filename) as f:
+        content = f.readlines()
+
+    size = map(lambda x: int(x), content[0].strip().split(' '))
+
+    grid = []
+    for line in content[1:]:
+        elements = map(lambda x: int(x), line.strip().split(' '))
+        assert len(elements) == int(size[1])
+        grid.append(elements)
+
+    assert len(grid) == size[0]
+    return (size[0], size[1]), grid
+
+
 def grid_search(size, grid):
     max_elements = []
     max_x, max_y = size
@@ -186,6 +202,12 @@ class SkiTest(unittest.TestCase):
         grid = [[4, 8, 7, 3], [2, 5, 9, 3], [6, 3, 2, 5], [4, 4, 1, 6]]
         res = grid_search(size, grid)
         self.assertEqual(res, [9, 5, 3, 2, 1])
+
+    def test_read_file(self):
+        filename = 'small-map.txt'
+        res = read_file(filename)
+        self.assertEqual(res[0], (4, 4))
+        self.assertEqual(res[1], [[4, 8, 7, 3], [2, 5, 9, 3], [6, 3, 2, 5], [4, 4, 1, 6]])
 
 if __name__ == '__main__':
     unittest.main()
