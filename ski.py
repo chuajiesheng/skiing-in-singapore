@@ -1,20 +1,20 @@
 import unittest
+from itertools import product
 
 
 def grid_search(size, grid):
     max_elements = []
     max_x, max_y = size
-    for x in range(max_x):
-        for y in range(max_y):
-            elements = longest_path(size, grid, (x, y))
+    for x, y in product(range(max_x), range(max_y)):
+        elements = longest_path(size, grid, (x, y))
 
-            if len(elements) > len(max_elements):
+        if len(elements) > len(max_elements):
+            max_elements = elements
+        elif len(elements) == len(max_elements):
+            max_elements_drop = max_elements[0] - max_elements[-1]
+            elements_drop = elements[0] - elements[-1]
+            if elements_drop > max_elements_drop:
                 max_elements = elements
-            elif len(elements) == len(max_elements):
-                max_elements_drop = max_elements[0] - max_elements[-1]
-                elements_drop = elements[0] - elements[-1]
-                if elements_drop > max_elements_drop:
-                    max_elements = elements
 
     return max_elements
 
