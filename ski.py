@@ -2,10 +2,7 @@ import unittest
 
 
 def longest_path(size, grid, current_pos):
-    x, y = current_pos
-    max_x, max_y = size
-
-    possible_movement = next_possible_movement(max_x, max_y, x, y)
+    possible_movement = next_possible_movement(size, current_pos)
     possible_movement_down = valid_next_movement(current_pos, grid, possible_movement)
 
     max_path_length = 1
@@ -32,7 +29,10 @@ def valid_next_movement(current_pos, grid, possible_movement):
     return possible_movement_down
 
 
-def next_possible_movement(max_x, max_y, x, y):
+def next_possible_movement(size, current_pos):
+    x, y = current_pos
+    max_x, max_y = size
+
     possible_movement = []
     # move up
     if (x - 1) > -1:
@@ -70,17 +70,17 @@ class SkiTest(unittest.TestCase):
         self.assertEqual(res, 3)
 
     def test_next_possible_movement(self):
-        max_x = max_y = 2
-        x = y = 0
-        res = next_possible_movement(max_x, max_y, x, y)
+        size = (2, 2)
+        current_pos = (0, 0)
+        res = next_possible_movement(size, current_pos)
         self.assertEqual(len(res), 2)
         self.assertTrue((0, 1) in res)
         self.assertTrue((1, 0) in res)
 
     def test_next_possible_movement_3_by_3(self):
-        max_x = max_y = 3
-        x = y = 1
-        res = next_possible_movement(max_x, max_y, x, y)
+        size = (3, 3)
+        current_pos = (1, 1)
+        res = next_possible_movement(size, current_pos)
         self.assertEqual(len(res), 4)
         self.assertTrue((0, 1) in res)
         self.assertTrue((1, 0) in res)
