@@ -11,16 +11,29 @@ def longest_path(size, grid, current_pos):
     max_elements = []
 
     for next_pos in possible_movement_down:
-        max_possible = longest_path(size, grid, next_pos)
-        if len(max_possible) > len(max_elements):
-            max_elements = max_possible
-        elif len(max_possible) == len(max_elements):
-            last_of_max_element = max_elements[-1]
-            last_of_max_possible = max_possible[-1]
-            if last_of_max_possible < last_of_max_element:
-                max_elements = max_possible
+        found, elements = get_path_with_max_drop(grid, max_elements, next_pos, size)
+        if found:
+            max_elements = elements
 
     return [current_level] + max_elements
+
+
+def get_path_with_max_drop(grid, max_elements, next_pos, size):
+    len_max_elements = len(max_elements)
+
+    max_possible = longest_path(size, grid, next_pos)
+    len_max_possible = len(max_possible)
+
+    result = (False, [])
+
+    if len_max_possible > len_max_elements:
+        result = (True, max_possible)
+    elif len_max_possible == len_max_elements:
+        last_of_max_element = max_elements[-1]
+        last_of_max_possible = max_possible[-1]
+        result = (last_of_max_possible < last_of_max_element, max_possible)
+
+    return result
 
 
 def valid_next_movement(current_pos, grid, possible_movement):
@@ -133,6 +146,22 @@ class SkiTest(unittest.TestCase):
         current_pos = (1, 1)
         res = longest_path(size, grid, current_pos)
         self.assertEqual(res, [3, 1])
+
+    def test_get_path_with_max_drop(self):
+        size = (3, 3)
+        grid = [[9, 9, 9], [9, 3, 2], [9, 1, 9]]
+        max_elements = [2]
+        next_pos = (2, 1)
+        res = get_path_with_max_drop(grid, max_elements, next_pos, size)
+        self.assertEqual(res, (True, [1]))
+
+    def test_get_path_with_max_drop_without_result(self):
+        size = (3, 3)
+        grid = [[9, 9, 9], [9, 3, 2], [9, 1, 9]]
+        max_elements = [1]
+        next_pos = (1, 2)
+        res = get_path_with_max_drop(grid, max_elements, next_pos, size)
+        self.assertEqual(res, (False, [2]))
 
 
 if __name__ == '__main__':
