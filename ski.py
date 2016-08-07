@@ -14,6 +14,11 @@ def longest_path(size, grid, current_pos):
         max_possible = longest_path(size, grid, next_pos)
         if len(max_possible) > len(max_elements):
             max_elements = max_possible
+        elif len(max_possible) == len(max_elements):
+            last_of_max_element = max_elements[-1]
+            last_of_max_possible = max_possible[-1]
+            if last_of_max_possible < last_of_max_element:
+                max_elements = max_possible
 
     return [current_level] + max_elements
 
@@ -118,6 +123,16 @@ class SkiTest(unittest.TestCase):
         current_pos = (1, 2)
         res = longest_path(size, grid, current_pos)
         self.assertEqual(res, [9, 5, 3, 2, 1])
+
+    def test_longest_path_with_choice(self):
+        # 9 9 9
+        # 9 3 2
+        # 9 1 9
+        size = (3, 3)
+        grid = [[9, 9, 9], [9, 3, 2], [9, 1, 9]]
+        current_pos = (1, 1)
+        res = longest_path(size, grid, current_pos)
+        self.assertEqual(res, [3, 1])
 
 
 if __name__ == '__main__':
