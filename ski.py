@@ -1,6 +1,24 @@
 import unittest
 
 
+def grid_search(size, grid):
+    max_elements = []
+    max_x, max_y = size
+    for x in range(max_x):
+        for y in range(max_y):
+            elements = longest_path(size, grid, (x, y))
+
+            if len(elements) > len(max_elements):
+                max_elements = elements
+            elif len(elements) == len(max_elements):
+                max_elements_drop = max_elements[0] - max_elements[-1]
+                elements_drop = elements[0] - elements[-1]
+                if elements_drop > max_elements_drop:
+                    max_elements = elements
+
+    return max_elements
+
+
 def longest_path(size, grid, current_pos):
     x, y = current_pos
     current_level = grid[x][y]
@@ -163,6 +181,11 @@ class SkiTest(unittest.TestCase):
         res = get_path_with_max_drop(grid, max_elements, next_pos, size)
         self.assertEqual(res, (False, [2]))
 
+    def test_grid_search(self):
+        size = (4, 4)
+        grid = [[4, 8, 7, 3], [2, 5, 9, 3], [6, 3, 2, 5], [4, 4, 1, 6]]
+        res = grid_search(size, grid)
+        self.assertEqual(res, [9, 5, 3, 2, 1])
 
 if __name__ == '__main__':
     unittest.main()
