@@ -210,4 +210,11 @@ class SkiTest(unittest.TestCase):
         self.assertEqual(res[1], [[4, 8, 7, 3], [2, 5, 9, 3], [6, 3, 2, 5], [4, 4, 1, 6]])
 
 if __name__ == '__main__':
-    unittest.main()
+    # unittest.main()
+
+    filename = 'map.txt'
+    size, grid = read_file(filename)
+    result = grid_search(size, grid)
+    print 'result', result
+    print 'len', len(result)
+    print 'drop', result[0] - result[-1]
